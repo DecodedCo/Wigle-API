@@ -1,23 +1,26 @@
 var express    = require('express');
 var querystring = require('querystring');
-var https = require('https');
+// var https = require('https');
+var fs = require("fs");
+var https = require('socks5-https-client');
 var bodyParser = require('body-parser');
 var app        = express();
 
 app.use(bodyParser.json());
-var post_data = querystring.stringify({
-      'Query' : 'Query',
-  });
 
-//use this to set cookies
-app.get('/', function(req, res) {
-    res.json({ message: 'To use this, post json to /ssids' });   
-});
-
-app.post('/ssids', function(req, res) {
+app.post('/test', function(req, res) {
   var loginCookie = req.query.cookies;
+      var ssid = req.body.ssid;
+      console.log(req.body.ssid)
+      var content = fs.readFileSync("test.json");
+      res.setHeader('Content-Type', 'application/json');
+      res.send(content)
+})
+app.post('/ssids', function(req, res) {
+  var loginCookie = req.body.auth;
     var ssid = req.body.ssid;
-
+    console.log("ssid: ", req.body.ssid, "cookie: ", loginCookie)
+    
     res.setHeader('Content-Type', 'application/json');
     //post request options
     var post_options = {
@@ -27,11 +30,15 @@ app.post('/ssids', function(req, res) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Cookie': loginCookie
-        }
+            'Cookie': 'auth='+loginCookie
+        },
+        socksPort: 9150 // Tor port.
     };
-
+      var post_data = querystring.stringify({
+          'Query' : 'Query',
+      });
       post_data += "&ssid=" + ssid 
+      console.log("data: " + post_data)
       post_options.headers["Content-Length"] = Buffer.byteLength(post_data)
       console.log(post_options.headers)
       // Set up the request
@@ -48,6 +55,7 @@ app.post('/ssids', function(req, res) {
       post_req.end();
 });
 
+  app.use(express.static('public'));
 
   var server = app.listen(3000, function () {
   var host = server.address().address;

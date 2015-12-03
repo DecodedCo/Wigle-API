@@ -6,7 +6,8 @@
   "dependencies": {
     "express": "~4.13.3",
     "compression": "~1.6.0",
-    "body-parser": "~1.14.1"
+    "body-parser": "~1.14.1",
+    "socks5-https-client": "~1.1.2"
   },
   "engines": {
     "node": "0.12.2"

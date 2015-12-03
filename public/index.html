@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+
+    <title>Wigle API</title>
+  </head>
+  <body>
+    <div id="map"></div>
+  </body>
+
+  <script type="text/javascript">
+
+var snazzyMap = [{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#0f252e"},{"lightness":17}]}];
+var message = '';
+
+$(document).ready(function() {
+    //get SSID from GET parameter. Can only handle 1 at a time atm.
+	 getSSIDData(getUrlParameter('ssid')); 
+	  var map = new google.maps.Map(document.getElementById('map'), {
+	    zoom: 3,
+	    center: {lat: 48.864716, lng: 2.349014 },
+	    styles : snazzyMap
+	  });
+
+	  setMarkers(map);
+      // alert("in test mode");
+})
+
+var SSIDS = {} //store the responses
+function getSSIDData(SSID) {
+    console.log("THE SSID: " + SSID)
+	 $.ajax({
+        type: "POST",
+        url: '/ssids',
+        contentType: 'application/json',
+        async: false,
+        //json object to sent to the authentication url
+        data: JSON.stringify({"ssid":SSID, "auth":'tomw1%3A232944835%3A1449154959%3ADWtDHY0Zv%2FM0wtoOH8QJdQ'}),
+        success: function (data) {
+        	SSIDS = data;
+        }
+    });
+}
+// Data for the markers consisting of a name, a LatLng and a zIndex for the
+// order in which these markers should display on top of each other.
+
+var markers = [];
+function setMarkers(map) {
+  // Adds markers to the map.
+var strength = 0.8;
+var size = 5;
+var whiteColor = "rgb(255, 255, 255)";
+
+var icon = {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: size,
+      fillOpacity: strength,
+      fillColor: whiteColor,
+      strokeWeight: 0
+      }
+
+
+  google.maps.event.addListener(map, 'idle', function(ev) {
+  	clearMarkers()
+  	var latEast = map.getBounds().getNorthEast().lat();
+	var lngEast = map.getBounds().getNorthEast().lng();
+	var latWest = map.getBounds().getSouthWest().lat();
+	var lngWest = map.getBounds().getSouthWest().lng();
+	var width = lngEast - lngWest;
+	var third = width / 3;
+
+		$.each(SSIDS.results, function(i, d) {
+	        var lat =d.trilat;
+			var lng = d.trilong;
+			var infowindow = new google.maps.InfoWindow({
+				content: (d.msg === undefined ? '' : d.msg)
+			});
+			var marker = new google.maps.Marker({
+	        // Set the position of the marker
+	        position: new google.maps.LatLng(lat, lng),
+	        // Put the marker on a Google map
+	        map: map,
+	        icon: icon
+	      });
+			
+			google.maps.event.addListener(marker, 'click', function() {
+		   		infowindow.open(map,marker);
+			});				
+			
+			if (d.msg != undefined) {
+				infowindow.open(map,marker);
+			}
+			markers.push(marker)
+	    });
+
+
+  });
+}
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+// Removes the markers from the map
+function clearMarkers() {
+  setMapOnAll(null);
+}
+function setMapOnAll(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+  markers = [];
+}
+</script>
+</html>
