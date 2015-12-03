@@ -1,0 +1,28 @@
+{
+  "name": "emailer",
+  "version": "0.0.3",
+  "description": "Email Frontend",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~4.13.3",
+    "compression": "~1.6.0",
+    "body-parser": "~1.14.1"
+  },
+  "engines": {
+    "node": "0.12.2"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "xxx"
+  },
+  "author": "Alex and Olly",
+  "license": "MIT",
+  "bugs": {
+    "url": "xxx/issues"
+  }
+}
