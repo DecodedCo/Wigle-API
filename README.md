@@ -1,7 +1,9 @@
-## Wigle API written in Node.
+## Wigle API written in Node, that uses the TOR network.
 
+* This interacts with wigle search database. Currently can search by SSID.
+* It uses Tor to mask your IP as Wigle restricts number of requests based on login AND IP address.
 
-This interacts with wigle search database. Currently can search by SSID.
+* You need Tor installed and running to use this
 
 ## /
 

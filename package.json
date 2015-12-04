@@ -1,7 +1,7 @@
 {
-  "name": "emailer",
-  "version": "0.0.3",
-  "description": "Email Frontend",
+  "name": "Wigle API",
+  "version": "0.0.1",
+  "description": "Nodejs API into Wigle db through TOR network",
   "main": "server.js",
   "dependencies": {
     "express": "~4.13.3",
@@ -14,16 +14,15 @@
   },
   "keywords": [
     "node",
-    "heroku",
     "express"
   ],
   "repository": {
     "type": "git",
-    "url": "xxx"
+    "url": "https://github.com/DecodedCo/Wigle-API"
   },
-  "author": "Alex and Olly",
+  "author": "Decoded Alex",
   "license": "MIT",
   "bugs": {
-    "url": "xxx/issues"
+    "url": "https://github.com/DecodedCo/Wigle-API/issues"
   }
 }
