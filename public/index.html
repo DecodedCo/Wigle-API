@@ -27,7 +27,15 @@ var message = '';
 
 $(document).ready(function() {
     //get SSID from GET parameter. Can only handle 1 at a time atm.
-	 getSSIDData(getUrlParameter('ssid')); 
+	 var ssid = getUrlParameter('ssid');
+   var latrange1 = getUrlParameter('latrange1');
+   var latrange2 = getUrlParameter('latrange2');
+   var longrange1 = getUrlParameter('longrange1');
+   var longrange2 = getUrlParameter('longrange2');
+   var first = getUrlParameter('first');
+   var last = getUrlParameter('last');
+
+   getData(ssid, latrange1, latrange2, longrange1, longrange2, first, last); 
 	  var map = new google.maps.Map(document.getElementById('map'), {
 	    zoom: 3,
 	    center: {lat: 48.864716, lng: 2.349014 },
@@ -39,16 +47,24 @@ $(document).ready(function() {
 })
 
 var SSIDS = {} //store the responses
-function getSSIDData(SSID) {
-    console.log("THE SSID: " + SSID)
+function getData(ssid, latrange1, latrange2, longrange1, longrange2, first, last) {
+  if (ssid === undefined) { ssid = ""}
+  if (latrange1 === undefined) { latrange1 = ""}
+  if (latrange2 === undefined) { latrange2 = ""}
+  if (longrange1 === undefined) { longrange1 = ""}
+  if (longrange2 === undefined) { longrange2 = ""}
+  if (first === undefined) { first = ""}
+  if (last === undefined) { last = ""}
+    console.log("THE SSID: " + ssid)
 	 $.ajax({
         type: "POST",
         url: '/ssids',
         contentType: 'application/json',
         async: false,
         //json object to sent to the authentication url
-        data: JSON.stringify({"ssid":SSID, "auth":'amlwwalker%3A23191064%3A1449184324%3AbVu8EUROSIS9kKpUQdkXyw'}),
+        data: JSON.stringify({"ssid":ssid, "latrange1":latrange1, "latrange2":latrange2, "longrange1":longrange1, "longrange2":longrange2, "first":first, "last":last, "auth":'amlwwalker%3A23191064%3A1449184324%3AbVu8EUROSIS9kKpUQdkXyw'}),
         success: function (data) {
+          console.log(data)
         	SSIDS = data;
         }
     });
