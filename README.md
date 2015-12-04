@@ -35,4 +35,6 @@ POST:
 {"auth":"[auth key]", "ssid":"[ssid]"}
 ```
 
+{"ssid":[ssid], "latrange1":[latrange1], "latrange2":[latrange2], "longrange1":[longrange1], "longrange2":[longrange2], "first":[first], "auth":'[auth key]'}
+
 Notice the auth key is your cookie from when you are logged in to Wigle. Log in to Wigle, then graph you auth key from cookies in the inspector. Too many requests will fail
